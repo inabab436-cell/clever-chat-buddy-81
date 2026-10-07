@@ -182,7 +182,7 @@ function LoginPage() {
           </>
         ) : null}
 
-        {(mode !== "reset" || codeSent) && !(mode === "login" && isOwner) ? (
+        {(mode !== "reset" || codeSent) ? (
           <div className="space-y-1.5">
             <Label htmlFor="password">
               {mode === "login"
