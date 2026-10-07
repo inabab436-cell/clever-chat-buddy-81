@@ -277,9 +277,6 @@ function WelcomePage() {
                   </Button>
                 ) : (
                   <>
-                    <button type="button" onClick={() => setStep(3)} className="text-xs font-semibold text-primary hover:underline">
-                      أريد التجربة مرة أخرى
-                    </button>
                     <button type="button" onClick={finish} disabled={busy} className="text-xs font-semibold text-muted-foreground hover:text-foreground">
                       لاحقًا، اذهب إلى لوحة التحكم
                     </button>
