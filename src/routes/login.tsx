@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from "react";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 
 import { AuthCard, SpamNotice } from "@/components/auth/auth-card";
@@ -15,6 +15,7 @@ import {
   resetPasswordWithCode,
 } from "@/lib/merchant-email-auth.functions";
 import { ADMIN_EMAIL, adminLogin } from "@/lib/admin.functions";
+import { ONBOARDING_DONE_KEY } from "@/lib/onboarding";
 
 export const Route = createFileRoute("/login")({
   head: () => ({
@@ -33,6 +34,7 @@ export const Route = createFileRoute("/login")({
 type Mode = "login" | "signup" | "reset";
 
 function LoginPage() {
+  const navigate = useNavigate();
   const login = useServerFn(loginWithPassword);
   const sendSignup = useServerFn(requestSignupCode);
   const finishSignup = useServerFn(completeSignup);
@@ -74,7 +76,11 @@ function LoginPage() {
 
   function go(res: { ok: boolean; message: string; nextRoute?: string }) {
     if (!res.ok) return setError(res.message);
-    window.location.replace("/dashboard");
+    const to = mode === "signup" || res.nextRoute === "/welcome" ? "/welcome" : "/dashboard";
+    if (to === "/welcome") {
+      try { window.localStorage.removeItem(ONBOARDING_DONE_KEY); } catch { /* Storage may be unavailable. */ }
+    }
+    void navigate({ to, replace: true });
   }
 
   const onSubmit = (e: FormEvent) => {
