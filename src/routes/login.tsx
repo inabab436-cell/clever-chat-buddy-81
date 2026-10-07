@@ -14,7 +14,6 @@ import {
   requestSignupCode,
   resetPasswordWithCode,
 } from "@/lib/merchant-email-auth.functions";
-import { ALLOWED_EMAIL, directSignIn } from "@/lib/direct-login.functions";
 import { ADMIN_EMAIL, adminLogin } from "@/lib/admin.functions";
 
 export const Route = createFileRoute("/login")({
@@ -49,10 +48,8 @@ function LoginPage() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [info, setInfo] = useState<string | null>(null);
-  const direct = useServerFn(directSignIn);
   const loginAdmin = useServerFn(adminLogin);
   const isAdmin = email.trim().toLowerCase() === ADMIN_EMAIL;
-  const isOwner = email.trim().toLowerCase() === ALLOWED_EMAIL;
 
   function switchMode(m: Mode) {
     setMode(m);
@@ -87,8 +84,6 @@ function LoginPage() {
         const r = await loginAdmin({ data: { email, password } });
         if (!r.ok) return setError(r.message);
         window.location.replace("/admin");
-      } else if (mode === "login" && isOwner) {
-        go(await direct());
       } else if (mode === "login") {
         go(await login({ data: { email, password } }));
       } else if (!codeSent) {
@@ -187,7 +182,7 @@ function LoginPage() {
           </>
         ) : null}
 
-        {(mode !== "reset" || codeSent) && !(mode === "login" && isOwner) ? (
+        {(mode !== "reset" || codeSent) ? (
           <div className="space-y-1.5">
             <Label htmlFor="password">
               {mode === "login"

@@ -8,10 +8,11 @@ import { createServerFn } from "@tanstack/react-start";
 
 import type { LoginResult } from "@/lib/auth-types";
 
-export const ALLOWED_EMAIL = "inabab436@gmail.com";
+export const ALLOWED_EMAIL = "";
 
 export const directSignIn = createServerFn({ method: "POST" }).handler(
   async (): Promise<LoginResult> => {
+    if (!ALLOWED_EMAIL) return { ok: false, message: "تم إيقاف الدخول التلقائي." };
     const { getSupabaseAdmin } = await import(
       "@/integrations/supabase/client.server"
     );
