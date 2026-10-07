@@ -30,7 +30,7 @@ export const Route = createFileRoute("/welcome")({
   component: WelcomePage,
 });
 
-const STEPS = ["أهلاً بك", "هوية متجرك", "أساسيات البيع", "جرّب متجرك", "فعّل متجرك"];
+const STEPS = ["أهلاً بك", "هوية متجرك", "أساسيات البيع", "فعّل متجرك"];
 
 function fileToBase64(file: File): Promise<string> {
   return new Promise((res, rej) => {
@@ -129,7 +129,7 @@ function WelcomePage() {
           <div className="flex items-center gap-2">
             <CupaiLogo markClassName="h-6 w-6" textClassName="text-sm font-bold" />
           </div>
-          {step < 4 ? (
+          {step < 3 ? (
             <button type="button" onClick={finish} disabled={busy} className="text-xs font-semibold text-muted-foreground hover:text-foreground">
               تخطَّ الآن
             </button>
@@ -219,34 +219,21 @@ function WelcomePage() {
                 <Task to="/shipping" n={2} icon={<Truck className="h-5 w-5" />} tone="bg-dashboard-blue-soft text-dashboard-blue" title="حدّد مناطق الشحن" text="أين توصّل وكم التكلفة" />
                 <Task to="/settings/payment-methods" n={3} icon={<CreditCard className="h-5 w-5" />} tone="bg-dashboard-rose-soft text-dashboard-rose" title="فعّل طرق الدفع" text="كيف تستلم أموالك من العملاء" />
               </div>
-              <StepNav onBack={() => setStep(1)} onNext={() => setStep(3)} nextLabel="عاين متجرك" />
+              <StepNav onBack={() => setStep(1)} onNext={() => setStep(3)} nextLabel="متابعة" />
             </section>
           )}
 
           {step === 3 && (
-            <section>
-              <h1 className="text-xl font-extrabold">هكذا سيبدو متجرك</h1>
-              <p className="mt-1 text-sm text-muted-foreground">
-                معاينة بمنتجات وطلب تجريبي لتوضيح كيف يعمل متجرك. لن تدفع أي شيء الآن.
-              </p>
-
-              <DemoStore name={name} logoUrl={logoUrl} />
-
-              <p className="mt-5 flex items-center gap-2 text-xs text-muted-foreground">
-                <ShieldCheck className="h-4 w-4 shrink-0 text-dashboard-green" />
-                المنتجات والطلب هنا للتوضيح فقط، ولن تظهر لعملائك.
-              </p>
-
-              <StepNav onBack={() => setStep(2)} onNext={() => setStep(4)} nextLabel="انتهيت من المعاينة" />
-            </section>
-          )}
-
-          {step === 4 && (
             <section className="text-center">
               <div className="mx-auto grid h-20 w-20 place-items-center rounded-full bg-dashboard-green-soft text-dashboard-green">
                 <PartyPopper className="h-10 w-10" />
               </div>
               <h1 className="mt-5 text-2xl font-extrabold sm:text-3xl">متجرك جاهز{name ? `، ${name}` : ""}!</h1>
+              {publicUrl ? (
+                <Button asChild size="lg" variant="outline" className="mt-5 w-full sm:w-auto sm:px-10">
+                  <a href={publicUrl} target="_blank" rel="noopener noreferrer"><Eye className="ml-1 h-4 w-4" /> ادخل لرؤية موقعك</a>
+                </Button>
+              ) : null}
 
               {activation?.subscribed ? (
                 <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-muted-foreground">
@@ -260,7 +247,7 @@ function WelcomePage() {
               ) : (
                 <>
                   <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-muted-foreground">
-                    شاهدت متجرك وجرّبته. خطوة أخيرة: فعّل متجرك ليبدأ عملاؤك في الطلب منه.
+                    خطوة أخيرة: فعّل متجرك ليبدأ عملاؤك في الطلب منه.
                   </p>
                   <div className="mx-auto mt-6 max-w-md rounded-2xl border border-border bg-card p-5 text-right shadow-card">
                     <div className="flex items-baseline justify-between">
