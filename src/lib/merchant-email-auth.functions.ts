@@ -46,7 +46,7 @@ async function startMerchantSession(userId: string, email: string): Promise<Logi
     message: "تم تسجيل الدخول.",
     email,
     setupCompleted,
-    nextRoute: "/dashboard",
+    nextRoute: setupCompleted ? "/dashboard" : "/welcome",
   };
 }
 

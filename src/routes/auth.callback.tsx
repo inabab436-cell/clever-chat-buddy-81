@@ -6,7 +6,7 @@
  * customer), then continues to the intended destination.
  */
 import { useEffect, useState } from "react";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 
 import { AuthCard } from "@/components/auth/auth-card";
 import {
@@ -15,6 +15,7 @@ import {
   readGoogleIntent,
 } from "@/lib/supabase-browser";
 import { googleSignInCustomer, googleSignInMerchant } from "@/lib/google-auth.functions";
+import { ONBOARDING_DONE_KEY } from "@/lib/onboarding";
 
 export const Route = createFileRoute("/auth/callback")({
   ssr: false,
@@ -32,6 +33,7 @@ export const Route = createFileRoute("/auth/callback")({
 });
 
 function AuthCallbackPage() {
+  const navigate = useNavigate();
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -70,9 +72,14 @@ function AuthCallbackPage() {
       }
 
       const res = await googleSignInMerchant({ data: { accessToken } });
+      if (!res.ok) throw new Error(res.message);
       clearGoogleIntent();
       await supabase.auth.signOut();
-      window.location.replace("/dashboard");
+      const to = res.nextRoute === "/welcome" ? "/welcome" : "/dashboard";
+      if (to === "/welcome") {
+        try { window.localStorage.removeItem(ONBOARDING_DONE_KEY); } catch { /* Storage may be unavailable. */ }
+      }
+      await navigate({ to, replace: true });
     })().catch((err: unknown) => {
       if (!active) return;
       setError(err instanceof Error ? err.message : "تعذّر إكمال تسجيل الدخول.");
@@ -81,7 +88,7 @@ function AuthCallbackPage() {
     return () => {
       active = false;
     };
-  }, []);
+  }, [navigate]);
 
   return (
     <AuthCard

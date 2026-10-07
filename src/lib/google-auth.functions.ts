@@ -59,7 +59,7 @@ export const googleSignInMerchant = createServerFn({ method: "POST" })
       message: "تم تسجيل الدخول.",
       email: user.email,
       setupCompleted,
-      nextRoute: "/dashboard",
+      nextRoute: setupCompleted ? "/dashboard" : "/welcome",
     };
   });
 

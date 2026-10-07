@@ -1,5 +1,8 @@
 # Roadmap
 
+- [x] Open onboarding immediately after merchant registration, including Google registration.
+- [ ] Improve the Google continuation screen design — awaiting visual preferences and direction selection.
+
 - [ ] Audit and remove site-visible AI/agent references and explicit imagery; report exact changes without altering functionality.
 
 - [x] Copy GitHub project files + install deps

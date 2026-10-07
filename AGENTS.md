@@ -13,3 +13,4 @@
 - Keep dashboard-specific visual tokens scoped under `.hub-dashboard` so the wider merchant hub retains its existing theme.
 - Platform admin console lives at /admin with its own encrypted cookie; every admin server fn re-checks it, because route guards don't protect RPC endpoints.
 - Site identity displays only merchant-provided logos, without a platform-logo fallback, to avoid reintroducing removed AI artwork.
+- Merchant authentication returns a setup-aware destination consumed directly by sign-in screens, so new accounts reach onboarding before the dashboard.
