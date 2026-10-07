@@ -39,7 +39,7 @@ export interface LoginResult {
   /** Whether the user has already completed the initial agent setup. */
   setupCompleted?: boolean;
   /** Route the client should navigate to next. */
-  nextRoute?: "/dashboard";
+  nextRoute?: "/dashboard" | "/welcome";
 }
 
 export interface SetupStatus {
