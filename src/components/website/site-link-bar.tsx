@@ -52,8 +52,21 @@ export function SiteIdentity() {
 
 /** Clear card showing the store's public link with open + copy actions. */
 export function SiteLinkCard() {
-  const { data: s } = useSite();
-  if (!s?.site_created || !s.brand_slug) return null;
+  const { data: s, isLoading } = useSite();
+  if (isLoading) return null;
+  if (!s?.site_created || !s.brand_slug) {
+    return (
+      <section className="rounded-lg border border-border bg-card p-4 shadow-card">
+        <div className="mb-1 text-sm font-bold">لم يتم إنشاء موقعك بعد</div>
+        <p className="mb-3 text-xs text-muted-foreground">
+          أنشئ موقعك بخطوات بسيطة، ثم فعّله بالدفع ليظهر لعملائك.
+        </p>
+        <Button asChild size="lg" className="h-11 w-full text-base">
+          <a href="/welcome">إنشاء الموقع</a>
+        </Button>
+      </section>
+    );
+  }
   const path = `/c/${s.brand_slug}`;
   const host = typeof window !== "undefined" ? window.location.host : "";
   const published = s.site_status === "published";
